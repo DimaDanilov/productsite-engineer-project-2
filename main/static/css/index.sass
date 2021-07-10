@@ -1,0 +1,71 @@
+.info
+    grid-template-columns: repeat(3, 1fr)
+    column-gap: 2%
+
+.login-info-card
+    width: 100%
+    margin: 3%
+    background-color: lightgrey
+    padding: 1%
+
+.content
+    width: 85%
+    margin: auto
+
+.chart-products
+    margin-top: 5vh !important
+    width: 50%
+
+.card-grid
+    display: grid
+    grid-template-columns: repeat(4, 1fr)
+    column-gap: 2%
+
+.card-grid-content
+    display: grid
+    grid-template-rows: auto 2fr 1fr
+
+.card
+    margin-top: 7%
+
+.mg-3vh
+    margin-top: 3vh
+
+.mg-5vh
+    margin-top: 5vh
+
+.nav-btn
+    color: white !important
+
+@media screen and (max-width: 770px) 
+    .card-grid
+        grid-template-columns: repeat(3, 1fr)
+    
+    .chart-products
+        width:75%
+
+
+@media screen and (max-width: 680px) 
+    .info
+        grid-template-columns: repeat(2, 1fr)
+
+
+@media screen and (max-width: 590px)
+    .card-grid
+        grid-template-columns: repeat(2, 1fr)
+
+@media screen and (max-width: 500px)
+    .info
+        grid-template-columns: repeat(1, 1fr)
+
+    .chart-products
+        width:100%
+
+@media screen and (max-width: 470px) 
+    .card-grid
+        grid-template-columns: repeat(1, 1fr)
+
+
+@media print
+    nav, .auth-user, .api, .filter, .info, .add-product
+        display: none

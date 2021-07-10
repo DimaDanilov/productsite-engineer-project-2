@@ -1,0 +1,188 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<body>
+    
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Магазин продуктов</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            {% if user.is_authenticated %}
+            <a class="nav-btn nav-item nav-link btn btn-danger" href="./admin/logout">Выйти</a>
+            {% endif %}
+            <a class="nav-btn nav-item nav-link btn btn-info" href="./register">Регистрация</a>
+            <a class="nav-btn nav-item nav-link btn btn-info" href="./accounts/login">Войти</a>
+            <a class="nav-btn nav-item nav-link btn btn-info" href="./admin">Django Admin</a>
+          </div>
+        </div>
+    </nav>
+    
+    <!-- Контент страницы -->
+    <div class="content">
+
+        <!-- Подсказка для входа под разными ролями -->
+        <div class="card-deck info">
+            <div class="card">
+                <h5 class="card-header">Данные пользователя</h5>
+                <div class="card-body">
+                    <h5 class="card-text">Логин: TESTUSER</h5>
+                    <h5 class="card-text">Пароль: qwweerrt</h5>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h5 class="card-header">Данные персонала</h5>
+                <div class="card-body">
+                    <h5 class="card-text">Логин: STAFFUSER</h5>
+                    <h5 class="card-text">Пароль: qwqwwewe</h5>
+                </div>
+            </div>
+
+            <div class="card">
+                <h5 class="card-header">Данные администратора</h5>
+                <div class="card-body">
+                    <h5 class="card-text">Логин: admin</h5>
+                    <h5 class="card-text">Пароль: admin</h5>
+                </div>
+            </div>
+        </div>
+
+    <!-- Отображаемая страница, если пользователь авторизован -->
+    {% if user.is_authenticated %}           
+        <h2 class="mg-3vh auth-user">Вы авторизированы как: {{user.username}}</h2>
+
+        {% if user.is_superuser %}
+        <a class="btn btn btn-dark mt-3 api" href="./api/products">api/products</a>
+        {% endif %}
+
+
+        <!-- Блок со списком продуктов -->
+        <div class="mg-5vh">
+            <h1 >Список продуктов</h1>
+
+            <!-- Фильтр -->
+            <div class="filter">
+                <form action="" method="get">
+                    <div class="mg-5vh card-grid">
+                        {{formsort.as_p}}
+                    </div>
+                    <input type="submit" value="Поиск" class="btn btn-success">
+                </form>
+            </div>
+
+            <div class="chart-products m-auto">
+            <canvas id="myChart"></canvas>
+            <script>
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: [{% for el in products %}'{{el.title}}',{% endfor %}],
+                    datasets: [{
+                        label: 'My First Dataset',
+                        data: [{% for el in products %}{{el.price}},{% endfor %}],
+                        backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(133, 227, 0)',
+                        'rgb(101, 41, 228)',
+                        'rgb(249, 107, 0)',
+                        'rgb(49, 41, 228)',
+                        'rgb(117, 74, 228)',
+                        'rgb(238, 233, 27)'
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            </script>
+            </div>
+
+
+            <!-- Отображение карточек товаров -->
+            <div class="mg-5vh card-grid">
+                {% for el in products %}
+                    <div class="card text-white bg-success">
+                        <div class="card-header"><h3>{{ el.title }}</h3></div>
+                        <div class="card-body card-grid-content">
+                            <h6 class="card-title">{{ el.brand }}</h6>
+                            <p class="card-text">{{ el.description }}</p>
+                            <h3 class="card-title text-right font-italic">{{ el.price }} руб.</h3>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Продавцы -->
+        <!-- Показывается если пользователь админ -->
+        {% if user.is_superuser %} 
+        <div class="mg-5vh">
+            <h1>Работники</h1>
+            <div class="mg-5vh card-grid">
+                {% for el in workers %}
+                    <div class="card text-white bg-info">
+                        <div class="card-header"><h3>{{ el.salername }}</h3></div>
+                        <div class="card-header"><h6>{{ el.post }}</h6></div>
+                        <div class="card-body card-grid-content">
+                            <h3 class="card-title text-right font-italic">{{ el.cash }} руб.</h3>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+
+        <!-- Форма для добавления продуктов -->
+        <!-- Если пользователь является персоналом -->
+        {% if user.is_staff %} 
+        <div class="mg-5vh add-product">
+            <h1>Добавить продукт</h1>
+            <form method="post" class="mg-5vh">
+                {% csrf_token %}
+                <label for="title">Название товара:</label>
+                {{form.title}}<br>
+                <label for="brand">Компания-производитель:</label>
+                {{form.brand}}<br>
+                <label for="productGroup">Отдел продукта:</label>
+                {{form.productGroup}}<br>
+                <label for="description">Описание товара:</label>
+                {{form.description}}<br>
+                <label for="price">Цена:</label>
+                {{form.price}}<br>
+                <button type="submit" class="btn btn-primary">Добавить</button>
+                <span>{{ error }}</span>
+            </form>
+        </div>
+    {% endif %}
+
+    <!-- Если пользователь не авторизован -->
+    {% else %}
+    <h2 class="mg-3vh">Вы не авторизированы.</h2>
+    {% endif %}
+    
+    </div>
+</body>
+</html>

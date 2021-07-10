@@ -1,0 +1,35 @@
+.form_container {
+  width: 80%;
+  margin: 10vh auto 0;
+}
+
+label {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 30%;
+  vertical-align: middle;
+}
+
+input {
+  width: 60%;
+  padding: 1%;
+}
+
+.field {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin-top: 1vh;
+}
+
+.button {
+  margin-top: 1vh;
+  width: 100%;
+}
